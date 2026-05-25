@@ -541,6 +541,9 @@
             </a>
             <div class="admin-nav-actions">
                 <a href="{{ route('home') }}" target="_blank"><i class="fas fa-external-link-alt"></i> View Site</a>
+                <button onclick="openModal('changePasswordModal')" class="btn-logout" style="background: rgba(201,168,76,0.15); color: #c9a84c; border-color: rgba(201,168,76,0.3);">
+                    <i class="fas fa-key"></i> Change Password
+                </button>
                 <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="btn-logout">
@@ -556,6 +559,16 @@
         @if(session('success'))
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Error Messages -->
+        @if($errors->any())
+            <div class="alert" style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #ef4444;">
+                <i class="fas fa-exclamation-circle"></i>
+                @foreach($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
             </div>
         @endif
 
@@ -816,6 +829,32 @@
                     <input type="text" name="description" class="form-control" placeholder="Brief description...">
                 </div>
                 <button type="submit" class="btn-submit">Add Service</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== CHANGE PASSWORD MODAL ========== -->
+    <div class="modal-overlay" id="changePasswordModal">
+        <div class="modal">
+            <div class="modal-title">
+                <span><i class="fas fa-key"></i> Change Password</span>
+                <button class="modal-close" onclick="closeModal('changePasswordModal')">&times;</button>
+            </div>
+            <form action="{{ route('admin.password.change') }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label>Current Password *</label>
+                    <input type="password" name="current_password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>New Password *</label>
+                    <input type="password" name="new_password" class="form-control" minlength="6" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password *</label>
+                    <input type="password" name="new_password_confirmation" class="form-control" minlength="6" required>
+                </div>
+                <button type="submit" class="btn-submit">Change Password</button>
             </form>
         </div>
     </div>

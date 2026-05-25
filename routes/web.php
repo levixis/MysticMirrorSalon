@@ -25,6 +25,7 @@ Route::post('/admin/reset-password', [AdminController::class, 'updatePassword'])
 Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
+    Route::post('/change-password', [AdminController::class, 'changePassword'])->name('admin.password.change');
 
     // Receipt / PDF
     Route::get('/receipt/create', [AdminController::class, 'createReceipt'])->name('admin.receipt.create');

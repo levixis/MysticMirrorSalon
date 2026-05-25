@@ -152,6 +152,30 @@ class AdminController extends Controller
             ->with('success', 'Password updated successfully! Please login with your new password.');
     }
 
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $storedHash = $this->getStoredPassword();
+        
+        // If there's a stored hash, verify current password
+        if ($storedHash && !Hash::check($request->current_password, $storedHash)) {
+            return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+        
+        // If no stored hash, they must be using the default password 'admin123'
+        if (!$storedHash && $request->current_password !== 'admin123') {
+            return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+
+        $this->savePassword($request->new_password);
+        
+        return back()->with('success', 'Password changed successfully!');
+    }
+
     public function dashboard()
     {
         // Revenue
