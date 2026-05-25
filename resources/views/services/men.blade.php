@@ -98,7 +98,7 @@
             <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 1.1rem;">
                 Love what you see? Book your appointment now!
             </p>
-            <a href="{{ route('appointment.create') }}" class="btn btn-gold" style="padding: 1rem 3rem;">
+            <a href="{{ route('contact') }}" class="btn btn-gold" style="padding: 1rem 3rem;">
                 <i class="fas fa-calendar-check"></i> Book Appointment
             </a>
         </div>
