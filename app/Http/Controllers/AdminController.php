@@ -105,11 +105,15 @@ class AdminController extends Controller
 
         $resetUrl = route('admin.password.reset', ['token' => $token]);
 
+        if (empty(config('mail.mailers.smtp.password')) && config('mail.default') === 'smtp') {
+            return back()->withErrors(['email' => 'Mail password is not configured on the server. Please use the default password (admin123) to login at /admin/login.']);
+        }
+
         try {
             Mail::to($adminEmail)->send(new AdminPasswordReset($resetUrl));
         } catch (\Exception $e) {
             \Log::error('Failed to send reset email: ' . $e->getMessage());
-            return back()->withErrors(['email' => 'Failed to send email. Please try again.']);
+            return back()->withErrors(['email' => 'Failed to send email. Please try again or use the default password (admin123).']);
         }
 
         return back()->with('success', 'Password reset link sent to your email!');
