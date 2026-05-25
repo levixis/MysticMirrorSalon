@@ -330,15 +330,32 @@
             <div class="form-card">
                 <div class="form-card-title"><i class="fas fa-scissors"></i> Select Services</div>
 
+                <!-- Search Bar -->
+                <div class="form-group" style="position: relative; margin-bottom: 1rem;">
+                    <div style="position: relative;">
+                        <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #888; font-size: 0.85rem;"></i>
+                        <input type="text" id="serviceSearch" class="form-control" placeholder="Search services... e.g. Haircut, Facial, Spa"
+                            style="padding-left: 2.5rem; padding-right: 2.5rem;" autocomplete="off">
+                        <button type="button" id="clearSearch" onclick="clearServiceSearch()" 
+                            style="position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888; cursor: pointer; font-size: 1rem; display: none;">&times;</button>
+                    </div>
+                    <div id="searchCount" style="color: #888; font-size: 0.75rem; margin-top: 0.4rem; display: none;"></div>
+                </div>
+
                 @php
                     $menServices = $services->where('gender', 'men');
                     $womenServices = $services->where('gender', 'women');
                 @endphp
 
+                <div id="noResults" style="text-align: center; color: #888; padding: 2rem 0; display: none;">
+                    <i class="fas fa-search" style="font-size: 1.5rem; color: #555; display: block; margin-bottom: 0.5rem;"></i>
+                    No services found. Try a different search term.
+                </div>
+
                 @if($menServices->count())
-                    <div class="gender-label"><i class="fas fa-male"></i> Men's Services</div>
+                    <div class="gender-label" data-gender-label="men"><i class="fas fa-male"></i> Men's Services</div>
                     @foreach($menServices as $service)
-                        <label class="service-checkbox" onclick="toggleService(this)">
+                        <label class="service-checkbox" onclick="toggleService(this)" data-service-name="{{ strtolower($service->name) }}" data-gender="men">
                             <div class="service-info">
                                 <div class="check-box"><i class="fas fa-check"></i></div>
                                 <span class="service-name">{{ $service->name }}</span>
@@ -351,9 +368,9 @@
                 @endif
 
                 @if($womenServices->count())
-                    <div class="gender-label"><i class="fas fa-female"></i> Women's Services</div>
+                    <div class="gender-label" data-gender-label="women"><i class="fas fa-female"></i> Women's Services</div>
                     @foreach($womenServices as $service)
-                        <label class="service-checkbox" onclick="toggleService(this)">
+                        <label class="service-checkbox" onclick="toggleService(this)" data-service-name="{{ strtolower($service->name) }}" data-gender="women">
                             <div class="service-info">
                                 <div class="check-box"><i class="fas fa-check"></i></div>
                                 <span class="service-name">{{ $service->name }}</span>
@@ -365,10 +382,33 @@
                     @endforeach
                 @endif
 
-                <!-- Total -->
-                <div class="total-display">
-                    <span class="total-label">Grand Total</span>
-                    <span class="total-amount" id="totalAmount">₹0/-</span>
+                <!-- Discount -->
+                <div class="form-card" style="margin-top: 1rem; padding: 1.5rem; border-radius: 10px;">
+                    <div class="form-card-title"><i class="fas fa-percent"></i> Discount</div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Discount Percentage</label>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <input type="number" name="discount_percent" id="discountPercent" class="form-control" value="{{ old('discount_percent', 0) }}" min="0" max="100" step="1" style="max-width: 120px;" oninput="updateTotal()">
+                            <span style="color: #c9a84c; font-weight: 600; font-size: 1.1rem;">%</span>
+                            <input type="range" id="discountSlider" min="0" max="100" value="{{ old('discount_percent', 0) }}" oninput="document.getElementById('discountPercent').value=this.value; updateTotal();" style="flex: 1; accent-color: #c9a84c;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Totals -->
+                <div class="total-display" style="flex-direction: column; gap: 0.8rem; align-items: stretch;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="total-label">Subtotal</span>
+                        <span style="font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: #b0a890;" id="subtotalAmount">₹0/-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;" id="discountRow" hidden>
+                        <span class="total-label" style="color: #22c55e;">Discount (<span id="discountLabel">0</span>%)</span>
+                        <span style="font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: #22c55e;" id="discountAmount">- ₹0</span>
+                    </div>
+                    <div style="border-top: 1px solid rgba(201,168,76,0.3); padding-top: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span class="total-label" style="font-size: 1.1rem;">Grand Total</span>
+                        <span class="total-amount" id="totalAmount">₹0/-</span>
+                    </div>
                 </div>
             </div>
 
@@ -381,7 +421,6 @@
     <script>
         function toggleService(el) {
             const checkbox = el.querySelector('input[type="checkbox"]');
-            // The label click will toggle checkbox automatically, so just update styles
             setTimeout(() => {
                 if (checkbox.checked) {
                     el.classList.add('selected');
@@ -393,11 +432,70 @@
         }
 
         function updateTotal() {
-            let total = 0;
+            let subtotal = 0;
             document.querySelectorAll('input[name="service_ids[]"]:checked').forEach(cb => {
-                total += parseInt(cb.dataset.price);
+                subtotal += parseInt(cb.dataset.price);
             });
+            const discountPercent = parseInt(document.getElementById('discountPercent').value) || 0;
+            document.getElementById('discountSlider').value = discountPercent;
+            const discountAmt = Math.round(subtotal * discountPercent / 100);
+            const total = subtotal - discountAmt;
+
+            document.getElementById('subtotalAmount').textContent = '₹' + subtotal.toLocaleString('en-IN') + '/-';
+            document.getElementById('discountLabel').textContent = discountPercent;
+            document.getElementById('discountAmount').textContent = '- ₹' + discountAmt.toLocaleString('en-IN');
+            document.getElementById('discountRow').hidden = discountPercent === 0;
             document.getElementById('totalAmount').textContent = '₹' + total.toLocaleString('en-IN') + '/-';
+        }
+
+        // Live Search
+        const searchInput = document.getElementById('serviceSearch');
+        const clearBtn = document.getElementById('clearSearch');
+        const searchCount = document.getElementById('searchCount');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            clearBtn.style.display = query ? 'block' : 'none';
+
+            const allServices = document.querySelectorAll('.service-checkbox');
+            let visibleCount = 0;
+            let visibleByGender = { men: 0, women: 0 };
+
+            allServices.forEach(el => {
+                const name = el.dataset.serviceName || '';
+                const gender = el.dataset.gender || '';
+                const matches = !query || name.includes(query);
+
+                el.style.display = matches ? 'flex' : 'none';
+                if (matches) {
+                    visibleCount++;
+                    if (gender) visibleByGender[gender]++;
+                }
+            });
+
+            // Toggle gender labels
+            document.querySelectorAll('[data-gender-label]').forEach(label => {
+                const gender = label.dataset.genderLabel;
+                label.style.display = visibleByGender[gender] > 0 ? 'block' : 'none';
+            });
+
+            // Show/hide no results
+            noResults.style.display = visibleCount === 0 && query ? 'block' : 'none';
+
+            // Show match count while searching
+            if (query) {
+                searchCount.style.display = 'block';
+                searchCount.textContent = visibleCount + ' service' + (visibleCount !== 1 ? 's' : '') + ' found';
+            } else {
+                searchCount.style.display = 'none';
+            }
+        });
+
+        function clearServiceSearch() {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
         }
 
         // Initialize on load

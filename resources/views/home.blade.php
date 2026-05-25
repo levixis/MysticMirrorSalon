@@ -470,8 +470,8 @@
             From classic haircuts to luxury facials — we bring out your finest look.
         </p>
         <div class="hero-buttons">
-            <a href="{{ route('appointment.create') }}" class="btn btn-gold">
-                <i class="fas fa-calendar-check"></i> Book Appointment
+            <a href="{{ route('contact') }}" class="btn btn-gold">
+                <i class="fas fa-envelope"></i> Contact Us
             </a>
             <a href="#services" class="btn btn-outline">
                 <i class="fas fa-scissors"></i> Our Services
@@ -588,9 +588,9 @@
     <div class="container">
         <div class="cta-section animate-fadeInUp">
             <h2>Ready for a Fresh Look?</h2>
-            <p>Book your appointment now and experience the Mystic Mirror difference</p>
-            <a href="{{ route('appointment.create') }}" class="btn btn-gold" style="padding: 1rem 3rem; font-size: 0.95rem; position: relative;">
-                <i class="fas fa-calendar-check"></i> Book Your Appointment
+            <p>Get in touch with us and experience the Mystic Mirror difference</p>
+            <a href="{{ route('contact') }}" class="btn btn-gold" style="padding: 1rem 3rem; font-size: 0.95rem; position: relative;">
+                <i class="fas fa-envelope"></i> Contact Us
             </a>
         </div>
     </div>

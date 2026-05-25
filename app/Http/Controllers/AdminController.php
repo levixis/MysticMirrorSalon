@@ -3,18 +3,47 @@
 namespace App\Http\Controllers;
 
 use App\Exports\RevenueExport;
-use App\Mail\AppointmentApproved;
-use App\Models\Appointment;
+use App\Mail\AdminPasswordReset;
 use App\Models\InstagramPost;
 use App\Models\Receipt;
 use App\Models\Service;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
+    // ---- Password Helpers ----
+
+    private function getAdminPasswordPath()
+    {
+        return storage_path('app/admin_password.json');
+    }
+
+    private function getStoredPassword()
+    {
+        $path = $this->getAdminPasswordPath();
+        if (file_exists($path)) {
+            $data = json_decode(file_get_contents($path), true);
+            return $data['password_hash'] ?? null;
+        }
+        return null;
+    }
+
+    private function savePassword(string $plainPassword)
+    {
+        $path = $this->getAdminPasswordPath();
+        file_put_contents($path, json_encode([
+            'password_hash' => Hash::make($plainPassword),
+            'updated_at' => now()->toDateTimeString(),
+        ]));
+    }
+
+    // ---- Auth ----
+
     public function loginForm()
     {
         if (session('admin_logged_in')) {
@@ -30,31 +59,97 @@ class AdminController extends Controller
             'password' => 'required',
         ]);
 
-        if ($request->username === 'admin' && $request->password === 'admin123') {
-            session(['admin_logged_in' => true]);
-            return redirect()->route('admin.dashboard');
+        if ($request->username !== 'admin') {
+            return back()->withErrors(['credentials' => 'Invalid credentials']);
+        }
+
+        $storedHash = $this->getStoredPassword();
+
+        if ($storedHash) {
+            // Check against stored hash
+            if (Hash::check($request->password, $storedHash)) {
+                session(['admin_logged_in' => true]);
+                return redirect()->route('admin.dashboard');
+            }
+        } else {
+            // Default password (first time)
+            if ($request->password === 'admin123') {
+                session(['admin_logged_in' => true]);
+                return redirect()->route('admin.dashboard');
+            }
         }
 
         return back()->withErrors(['credentials' => 'Invalid credentials']);
     }
 
-    public function dashboard(Request $request)
-    {
-        // Appointments
-        $query = Appointment::with('service')->latest();
+    // ---- Password Reset ----
 
-        if ($request->has('status') && in_array($request->status, ['pending', 'approved', 'cancelled'])) {
-            $query->where('status', $request->status);
+    public function forgotPassword()
+    {
+        return view('admin.reset-password');
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $adminEmail = config('mail.admin_email');
+
+        if ($request->email !== $adminEmail) {
+            return back()->withErrors(['email' => 'This email does not match the admin email on file.']);
         }
 
-        $appointments = $query->get();
-        $counts = [
-            'total' => Appointment::count(),
-            'pending' => Appointment::where('status', 'pending')->count(),
-            'approved' => Appointment::where('status', 'approved')->count(),
-            'cancelled' => Appointment::where('status', 'cancelled')->count(),
-        ];
+        // Generate token (valid for 30 min)
+        $token = Str::random(64);
+        cache()->put('admin_reset_token', $token, now()->addMinutes(30));
 
+        $resetUrl = route('admin.password.reset', ['token' => $token]);
+
+        try {
+            Mail::to($adminEmail)->send(new AdminPasswordReset($resetUrl));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send reset email: ' . $e->getMessage());
+            return back()->withErrors(['email' => 'Failed to send email. Please try again.']);
+        }
+
+        return back()->with('success', 'Password reset link sent to your email!');
+    }
+
+    public function resetPassword(Request $request, $token)
+    {
+        $storedToken = cache()->get('admin_reset_token');
+
+        if (!$storedToken || $storedToken !== $token) {
+            return redirect()->route('admin.password.forgot')
+                ->withErrors(['token' => 'Invalid or expired reset link. Please request a new one.']);
+        }
+
+        return view('admin.reset-password', ['token' => $token]);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $storedToken = cache()->get('admin_reset_token');
+
+        if (!$storedToken || $storedToken !== $request->token) {
+            return redirect()->route('admin.password.forgot')
+                ->withErrors(['token' => 'Invalid or expired reset link. Please request a new one.']);
+        }
+
+        $this->savePassword($request->password);
+        cache()->forget('admin_reset_token');
+
+        return redirect()->route('admin.login')
+            ->with('success', 'Password updated successfully! Please login with your new password.');
+    }
+
+    public function dashboard()
+    {
         // Revenue
         $todayRevenue = Receipt::whereDate('created_at', today())->sum('total');
         $monthlyRevenue = Receipt::whereMonth('created_at', now()->month)
@@ -71,34 +166,9 @@ class AdminController extends Controller
         $recentReceipts = Receipt::latest()->take(10)->get();
 
         return view('admin.dashboard', compact(
-            'appointments', 'counts',
             'todayRevenue', 'monthlyRevenue',
             'services', 'instagramPosts', 'recentReceipts'
         ));
-    }
-
-    // ---- Appointment Actions ----
-
-    public function approve($id)
-    {
-        $appointment = Appointment::with('service')->findOrFail($id);
-        $appointment->update(['status' => 'approved']);
-
-        try {
-            Mail::to($appointment->email)->send(new AppointmentApproved($appointment));
-        } catch (\Exception $e) {
-            \Log::error('Failed to send approval email: ' . $e->getMessage());
-        }
-
-        return back()->with('success', 'Appointment approved and email sent to customer!');
-    }
-
-    public function cancel($id)
-    {
-        $appointment = Appointment::findOrFail($id);
-        $appointment->update(['status' => 'cancelled']);
-
-        return back()->with('success', 'Appointment cancelled.');
     }
 
     // ---- Receipt / PDF ----
@@ -117,16 +187,22 @@ class AdminController extends Controller
             'service_ids' => 'required|array|min:1',
             'service_ids.*' => 'exists:services,id',
             'payment_method' => 'required|in:cash,upi,card',
+            'discount_percent' => 'nullable|integer|min:0|max:100',
         ]);
 
         $selectedServices = Service::whereIn('id', $request->service_ids)->get();
         $servicesData = $selectedServices->map(fn($s) => ['name' => $s->name, 'price' => $s->price])->toArray();
-        $total = $selectedServices->sum('price');
+        $subtotal = $selectedServices->sum('price');
+        $discountPercent = $request->discount_percent ?? 0;
+        $discountAmount = intval(round($subtotal * $discountPercent / 100));
+        $total = $subtotal - $discountAmount;
 
         $receipt = Receipt::create([
             'customer_name' => $request->customer_name,
             'phone' => $request->phone,
             'services' => $servicesData,
+            'subtotal' => $subtotal,
+            'discount_percent' => $discountPercent,
             'total' => $total,
             'payment_method' => $request->payment_method,
         ]);

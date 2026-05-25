@@ -102,7 +102,7 @@
         /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
             margin-bottom: 2rem;
         }
@@ -518,18 +518,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 1100px) {
-            .stats-grid { grid-template-columns: repeat(3, 1fr); }
-        }
         @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: 1fr; }
             .section-card { overflow-x: auto; }
             table { min-width: 700px; }
             .ig-form-row { flex-direction: column; }
             .ig-form-row .btn-submit { width: 100%; }
         }
         @media (max-width: 500px) {
-            .stats-grid { grid-template-columns: 1fr; }
             .admin-content { padding: 1rem; }
             .quick-actions { flex-direction: column; }
             .dashboard-tabs { overflow-x: auto; }
@@ -565,26 +561,6 @@
 
         <!-- Stats Grid -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon total"><i class="fas fa-calendar"></i></div>
-                <div class="stat-label">Total Appointments</div>
-                <div class="stat-value">{{ $counts['total'] }}</div>
-            </div>
-            <div class="stat-card pending">
-                <div class="stat-icon pending"><i class="fas fa-clock"></i></div>
-                <div class="stat-label">Pending</div>
-                <div class="stat-value">{{ $counts['pending'] }}</div>
-            </div>
-            <div class="stat-card approved">
-                <div class="stat-icon approved"><i class="fas fa-check"></i></div>
-                <div class="stat-label">Approved</div>
-                <div class="stat-value">{{ $counts['approved'] }}</div>
-            </div>
-            <div class="stat-card cancelled">
-                <div class="stat-icon cancelled"><i class="fas fa-times"></i></div>
-                <div class="stat-label">Cancelled</div>
-                <div class="stat-value">{{ $counts['cancelled'] }}</div>
-            </div>
             <div class="stat-card revenue">
                 <div class="stat-icon revenue"><i class="fas fa-rupee-sign"></i></div>
                 <div class="stat-label">Today's Revenue</div>
@@ -615,10 +591,7 @@
 
         <!-- Dashboard Tabs -->
         <div class="dashboard-tabs">
-            <button class="dash-tab active" onclick="switchTab('appointments')">
-                <i class="fas fa-calendar-alt"></i> Appointments
-            </button>
-            <button class="dash-tab" onclick="switchTab('services')">
+            <button class="dash-tab active" onclick="switchTab('services')">
                 <i class="fas fa-scissors"></i> Services
             </button>
             <button class="dash-tab" onclick="switchTab('receipts')">
@@ -629,99 +602,9 @@
             </button>
         </div>
 
-        <!-- ========== APPOINTMENTS TAB ========== -->
-        <div class="tab-content active" id="tab-appointments">
-            <div class="section-card">
-                <div class="filter-tabs">
-                    <a href="{{ route('admin.dashboard') }}" class="filter-tab {{ !request('status') ? 'active' : '' }}">
-                        All ({{ $counts['total'] }})
-                    </a>
-                    <a href="{{ route('admin.dashboard', ['status' => 'pending']) }}" class="filter-tab {{ request('status') == 'pending' ? 'active' : '' }}">
-                        <i class="fas fa-clock"></i> Pending ({{ $counts['pending'] }})
-                    </a>
-                    <a href="{{ route('admin.dashboard', ['status' => 'approved']) }}" class="filter-tab {{ request('status') == 'approved' ? 'active' : '' }}">
-                        <i class="fas fa-check"></i> Approved ({{ $counts['approved'] }})
-                    </a>
-                    <a href="{{ route('admin.dashboard', ['status' => 'cancelled']) }}" class="filter-tab {{ request('status') == 'cancelled' ? 'active' : '' }}">
-                        <i class="fas fa-times"></i> Cancelled ({{ $counts['cancelled'] }})
-                    </a>
-                </div>
-
-                @if($appointments->count() > 0)
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Customer</th>
-                                <th>Service</th>
-                                <th>Date & Time</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($appointments as $appointment)
-                                <tr>
-                                    <td style="color: #666;">{{ $appointment->id }}</td>
-                                    <td>
-                                        <div style="font-weight: 500;">{{ $appointment->customer_name }}</div>
-                                        <div style="font-size: 0.78rem; color: #888;">
-                                            <i class="fas fa-envelope" style="font-size: 0.65rem;"></i> {{ $appointment->email }}
-                                        </div>
-                                        <div style="font-size: 0.78rem; color: #888;">
-                                            <i class="fas fa-phone" style="font-size: 0.65rem;"></i> {{ $appointment->phone }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style="color: #c9a84c; font-weight: 500;">{{ $appointment->service->name }}</div>
-                                        <div style="font-size: 0.78rem; color: #888;">₹{{ $appointment->service->price }}/-</div>
-                                    </td>
-                                    <td>
-                                        <div><i class="fas fa-calendar" style="color: #c9a84c; font-size: 0.75rem;"></i> {{ $appointment->appointment_date->format('d M Y') }}</div>
-                                        <div style="font-size: 0.82rem; color: #888;">
-                                            <i class="fas fa-clock" style="font-size: 0.7rem;"></i> {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-{{ $appointment->status }}">
-                                            {{ ucfirst($appointment->status) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @if($appointment->status === 'pending')
-                                            <div class="action-btns">
-                                                <form action="{{ route('admin.approve', $appointment->id) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="btn-action btn-approve" title="Approve">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-                                                </form>
-                                                <form action="{{ route('admin.cancel', $appointment->id) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="btn-action btn-cancel" title="Cancel">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        @else
-                                            <span style="color: #555; font-size: 0.85rem;">—</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @else
-                    <div class="empty-state">
-                        <i class="fas fa-calendar-check"></i>
-                        <p>No appointments found</p>
-                    </div>
-                @endif
-            </div>
-        </div>
 
         <!-- ========== SERVICES TAB ========== -->
-        <div class="tab-content" id="tab-services">
+        <div class="tab-content active" id="tab-services">
             <div class="section-card">
                 <div class="section-header">
                     <h2><i class="fas fa-scissors"></i> Manage Services</h2>

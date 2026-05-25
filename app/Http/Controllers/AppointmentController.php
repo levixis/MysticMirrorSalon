@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewAppointmentNotification;
 use App\Models\Appointment;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class AppointmentController extends Controller
 {
@@ -25,7 +27,16 @@ class AppointmentController extends Controller
             'appointment_time' => 'required',
         ]);
 
-        Appointment::create($validated);
+        $appointment = Appointment::create($validated);
+
+        // Send notification email to admin
+        try {
+            $appointment->load('service');
+            $adminEmail = config('mail.admin_email', 'admin@mysticmirror.in');
+            Mail::to($adminEmail)->send(new NewAppointmentNotification($appointment));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send admin notification: ' . $e->getMessage());
+        }
 
         return redirect()->route('appointment.success');
     }
@@ -35,3 +46,4 @@ class AppointmentController extends Controller
         return view('appointments.success');
     }
 }
+

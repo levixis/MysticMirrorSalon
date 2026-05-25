@@ -10,6 +10,8 @@ class Receipt extends Model
         'customer_name',
         'phone',
         'services',
+        'subtotal',
+        'discount_percent',
         'total',
         'payment_method',
     ];

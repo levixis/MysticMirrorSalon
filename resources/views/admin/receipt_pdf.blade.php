@@ -208,6 +208,16 @@
 
         <!-- Total -->
         <div class="total-section">
+            @if($receipt->discount_percent > 0)
+            <div class="total-row" style="margin-bottom: 8px;">
+                <span class="total-label" style="font-size: 13px; color: #666;">Subtotal:</span>
+                <span class="total-value" style="font-size: 14px; color: #333;">₹{{ number_format($receipt->subtotal) }}/-</span>
+            </div>
+            <div class="total-row" style="margin-bottom: 12px;">
+                <span class="total-label" style="font-size: 13px; color: #22a55e;">Discount ({{ $receipt->discount_percent }}%):</span>
+                <span class="total-value" style="font-size: 14px; color: #22a55e;">- ₹{{ number_format($receipt->subtotal - $receipt->total) }}</span>
+            </div>
+            @endif
             <div class="total-row">
                 <span class="total-label">Grand Total:</span>
                 <span class="total-value">₹{{ number_format($receipt->total) }}/-</span>

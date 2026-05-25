@@ -115,4 +115,15 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Notification Email
+    |--------------------------------------------------------------------------
+    |
+    | This address receives notifications when new appointments are booked.
+    |
+    */
+
+    'admin_email' => env('ADMIN_EMAIL', 'admin@mysticmirror.in'),
+
 ];

@@ -609,7 +609,7 @@
                 <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
                 <li><a href="{{ route('services.men') }}" class="{{ request()->routeIs('services.men') ? 'active' : '' }}">Men</a></li>
                 <li><a href="{{ route('services.women') }}" class="{{ request()->routeIs('services.women') ? 'active' : '' }}">Women</a></li>
-                <li><a href="{{ route('appointment.create') }}" class="btn-book-nav">Book Now</a></li>
+                <li><a href="{{ route('contact') }}" class="btn-book-nav">Contact Us</a></li>
             </ul>
         </div>
     </nav>
@@ -637,7 +637,7 @@
                 <h3>Quick Links</h3>
                 <p><a href="{{ route('services.men') }}"><i class="fas fa-chevron-right" style="font-size: 0.6rem; margin-right: 0.4rem; opacity: 0.5;"></i>Men's Services</a></p>
                 <p><a href="{{ route('services.women') }}"><i class="fas fa-chevron-right" style="font-size: 0.6rem; margin-right: 0.4rem; opacity: 0.5;"></i>Women's Services</a></p>
-                <p><a href="{{ route('appointment.create') }}"><i class="fas fa-chevron-right" style="font-size: 0.6rem; margin-right: 0.4rem; opacity: 0.5;"></i>Book Appointment</a></p>
+                <p><a href="{{ route('contact') }}"><i class="fas fa-chevron-right" style="font-size: 0.6rem; margin-right: 0.4rem; opacity: 0.5;"></i>Contact Us</a></p>
             </div>
             <div class="footer-section">
                 <h3>Contact Us</h3>
