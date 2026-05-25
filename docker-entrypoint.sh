@@ -17,9 +17,9 @@ fi
 # Set permissions
 chmod -R 775 storage bootstrap/cache
 
-# Run migrations (fresh on first deploy to avoid partial state)
+# Run migrations (safe for production, won't drop tables)
 echo "🗄️  Running migrations..."
-php artisan migrate:fresh --force --seed 2>/dev/null || php artisan migrate:fresh --force
+php artisan migrate --force
 
 # Create storage symlink
 php artisan storage:link 2>/dev/null || true
