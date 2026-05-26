@@ -8,9 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('instagram_posts', function (Blueprint $table) {
-            $table->string('thumbnail_url')->nullable()->after('video_path');
-        });
+        if (!Schema::hasColumn('instagram_posts', 'thumbnail_url')) {
+            Schema::table('instagram_posts', function (Blueprint $table) {
+                $table->string('thumbnail_url')->nullable();
+            });
+        }
     }
 
     public function down(): void

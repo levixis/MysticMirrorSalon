@@ -313,29 +313,39 @@ class AdminController extends Controller
             'thumbnail_url' => 'nullable|url|max:500',
         ]);
 
-        // Use manually provided thumbnail, or auto-scrape from Instagram
-        $thumbnailUrl = $request->thumbnail_url;
+        try {
+            // Use manually provided thumbnail, or auto-scrape from Instagram
+            $thumbnailUrl = $request->thumbnail_url;
 
-        if (empty($thumbnailUrl)) {
-            $thumbnailUrl = $this->scrapeInstagramThumbnail($request->instagram_url);
+            if (empty($thumbnailUrl)) {
+                try {
+                    $thumbnailUrl = $this->scrapeInstagramThumbnail($request->instagram_url);
+                } catch (\Exception $e) {
+                    Log::warning('Thumbnail scrape failed: ' . $e->getMessage());
+                    $thumbnailUrl = null;
+                }
+            }
+
+            $maxOrder = InstagramPost::max('display_order') ?? 0;
+
+            InstagramPost::create([
+                'instagram_url' => $request->instagram_url,
+                'thumbnail_url' => $thumbnailUrl,
+                'display_order' => $maxOrder + 1,
+            ]);
+
+            $msg = 'Instagram reel added successfully!';
+            if ($thumbnailUrl) {
+                $msg .= ' Thumbnail auto-fetched.';
+            } else {
+                $msg .= ' (No thumbnail found — you can add one manually later.)';
+            }
+
+            return back()->with('success', $msg);
+        } catch (\Exception $e) {
+            Log::error('Failed to store Instagram post: ' . $e->getMessage());
+            return back()->withErrors(['instagram_url' => 'Failed to add reel: ' . $e->getMessage()]);
         }
-
-        $maxOrder = InstagramPost::max('display_order') ?? 0;
-
-        InstagramPost::create([
-            'instagram_url' => $request->instagram_url,
-            'thumbnail_url' => $thumbnailUrl,
-            'display_order' => $maxOrder + 1,
-        ]);
-
-        $msg = 'Instagram reel added successfully!';
-        if ($thumbnailUrl) {
-            $msg .= ' Thumbnail auto-fetched.';
-        } else {
-            $msg .= ' (No thumbnail found — you can add one manually later.)';
-        }
-
-        return back()->with('success', $msg);
     }
 
     /**
