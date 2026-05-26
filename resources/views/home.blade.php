@@ -5,7 +5,7 @@
 <style>
     /* === Hero Section === */
     .hero {
-        min-height: 100vh;
+        min-height: calc(100vh - 75px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -13,7 +13,6 @@
         position: relative;
         overflow: hidden;
         background: var(--bg-primary);
-        padding-top: 75px;
     }
     .hero::before {
         content: '';
@@ -668,7 +667,7 @@
     }
 
     @media (max-width: 768px) {
-        .hero { min-height: 100vh; padding-top: 80px; padding-bottom: 2rem; }
+        .hero { min-height: calc(100vh - 75px); padding-bottom: 2rem; }
         .hero-title { font-size: 3.2rem; }
         .hero-subtitle { font-size: 0.9rem; letter-spacing: 4px; }
         .hero-tagline { font-size: 1.2rem; margin-bottom: 1.5rem; }
