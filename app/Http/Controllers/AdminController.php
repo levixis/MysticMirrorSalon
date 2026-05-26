@@ -113,7 +113,7 @@ class AdminController extends Controller
             Mail::to($adminEmail)->send(new AdminPasswordReset($resetUrl));
         } catch (\Exception $e) {
             \Log::error('Failed to send reset email: ' . $e->getMessage());
-            return back()->withErrors(['email' => 'Failed to send email. Please try again or use the default password (admin123).']);
+            return back()->withErrors(['email' => 'SMTP Error: ' . $e->getMessage()]);
         }
 
         return back()->with('success', 'Password reset link sent to your email!');
