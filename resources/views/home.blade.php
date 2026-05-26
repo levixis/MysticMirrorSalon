@@ -5,7 +5,7 @@
 <style>
     /* === Hero Section === */
     .hero {
-        min-height: 92vh;
+        min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -13,6 +13,7 @@
         position: relative;
         overflow: hidden;
         background: var(--bg-primary);
+        padding-top: 75px;
     }
     .hero::before {
         content: '';
@@ -384,6 +385,63 @@
         max-width: 1100px;
         margin: 0 auto;
     }
+    /* Posts gallery — wider cards for photo content */
+    .ig-posts-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        max-width: 1100px;
+        margin: 1.5rem auto 0;
+    }
+    .ig-card-post {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(212,168,67,0.15);
+        background: linear-gradient(145deg, #111 0%, #0a0a0a 100%);
+        transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        cursor: pointer;
+        aspect-ratio: 4/5;
+    }
+    .ig-card-post:hover {
+        border-color: rgba(212,168,67,0.5);
+        transform: translateY(-6px);
+        box-shadow: 0 16px 48px rgba(212,168,67,0.12), 0 0 30px rgba(212,168,67,0.04);
+    }
+    .ig-card-post .ig-card-thumbnail {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-size: cover;
+        background-position: center top;
+        transition: transform 0.6s ease;
+    }
+    .ig-card-post:hover .ig-card-thumbnail {
+        transform: scale(1.05);
+    }
+    .ig-card-post .ig-card-overlay {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.4) 100%);
+        z-index: 1;
+        transition: background 0.4s ease;
+    }
+    .ig-card-post .ig-card-top {
+        position: absolute;
+        top: 0.8rem; right: 0.8rem;
+        z-index: 2;
+    }
+    .ig-section-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.7rem;
+        color: rgba(212,168,67,0.6);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-left: 0.2rem;
+    }
     .ig-card {
         position: relative;
         border-radius: 20px;
@@ -587,7 +645,7 @@
     }
 
     @media (max-width: 768px) {
-        .hero { min-height: 100vh; padding-top: 75px; }
+        .hero { min-height: 100vh; padding-top: 80px; padding-bottom: 2rem; }
         .hero-title { font-size: 3.2rem; }
         .hero-subtitle { font-size: 0.9rem; letter-spacing: 4px; }
         .hero-tagline { font-size: 1.2rem; margin-bottom: 1.5rem; }
@@ -604,6 +662,8 @@
 
         /* Instagram Gallery Mobile */
         .ig-gallery { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+        .ig-posts-gallery { grid-template-columns: 1fr; gap: 0.8rem; }
+        .ig-card-post { aspect-ratio: 1/1; }
         .ig-card-play { width: 48px; height: 48px; }
         .ig-card-play i { font-size: 1.1rem; margin-left: 3px; }
         .ig-card-info { padding: 0.6rem 0.6rem; }
@@ -766,7 +826,11 @@
 </section>
 
 <!-- Instagram Reels Gallery -->
-@if(isset($instagramPosts) && $instagramPosts->count() > 0)
+@php
+    $reels = isset($instagramPosts) ? $instagramPosts->filter(fn($p) => str_contains($p->instagram_url, '/reel/')) : collect();
+    $posts = isset($instagramPosts) ? $instagramPosts->filter(fn($p) => !str_contains($p->instagram_url, '/reel/')) : collect();
+@endphp
+@if($reels->count() > 0 || $posts->count() > 0)
 <section class="section" style="padding-top: 0;">
     <div class="container">
         <div class="section-title">
@@ -774,29 +838,42 @@
             <div class="divider"></div>
             <p>See our latest transformations and styles on Instagram</p>
         </div>
-        <div class="ig-gallery">
-            @foreach($instagramPosts as $index => $post)
-                <a href="{{ $post->instagram_url }}" target="_blank" rel="noopener noreferrer" class="ig-card animate-fadeInUp delay-{{ $index + 1 }}" style="text-decoration: none;">
-                    <div class="ig-card-thumbnail" style="background-image: url('{{ $post->thumbnail_url ?? '' }}'); background-color: #1a1a1a;"></div>
-                    <div class="ig-card-overlay"></div>
-                    <div class="ig-card-top">
-                        <div class="ig-reel-tag">
-                            @if(str_contains($post->instagram_url, '/reel/'))
-                                <i class="fas fa-film"></i> Reel
-                            @else
-                                <i class="fas fa-camera"></i> Post
-                            @endif
+
+        {{-- Reels Section --}}
+        @if($reels->count() > 0)
+            <div class="ig-section-label"><i class="fas fa-film"></i> &nbsp;Reels</div>
+            <div class="ig-gallery">
+                @foreach($reels as $index => $post)
+                    <a href="{{ $post->instagram_url }}" target="_blank" rel="noopener noreferrer" class="ig-card animate-fadeInUp delay-{{ $index + 1 }}" style="text-decoration: none;">
+                        <div class="ig-card-thumbnail" style="background-image: url('{{ $post->thumbnail_url ?? '' }}'); background-color: #1a1a1a;"></div>
+                        <div class="ig-card-overlay"></div>
+                        <div class="ig-card-top">
+                            <div class="ig-reel-tag"><i class="fas fa-film"></i> Reel</div>
                         </div>
-                    </div>
-                    @if(str_contains($post->instagram_url, '/reel/'))
                         <div class="ig-card-play">
                             <i class="fas fa-play"></i>
                         </div>
-                    @endif
+                    </a>
+                @endforeach
+            </div>
+        @endif
 
-                </a>
-            @endforeach
-        </div>
+        {{-- Posts Section --}}
+        @if($posts->count() > 0)
+            <div class="ig-section-label" style="margin-top: 2rem;"><i class="fas fa-camera"></i> &nbsp;Posts</div>
+            <div class="ig-posts-gallery">
+                @foreach($posts as $index => $post)
+                    <a href="{{ $post->instagram_url }}" target="_blank" rel="noopener noreferrer" class="ig-card-post animate-fadeInUp delay-{{ $index + 1 }}" style="text-decoration: none;">
+                        <div class="ig-card-thumbnail" style="background-image: url('{{ $post->thumbnail_url ?? '' }}'); background-color: #1a1a1a;"></div>
+                        <div class="ig-card-overlay"></div>
+                        <div class="ig-card-top">
+                            <div class="ig-reel-tag"><i class="fas fa-camera"></i> Post</div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
         <div style="text-align: center; margin-top: 2.5rem;">
             <a href="https://www.instagram.com/mystic.mirror_unisex.salon/" target="_blank" rel="noopener noreferrer" class="ig-follow-btn">
                 <i class="fab fa-instagram"></i> Follow Us on Instagram
