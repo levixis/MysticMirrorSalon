@@ -398,39 +398,62 @@
         border-radius: 16px;
         overflow: hidden;
         border: 1px solid rgba(212,168,67,0.15);
-        background: linear-gradient(145deg, #111 0%, #0a0a0a 100%);
+        background: #0a0a0a;
         transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
         cursor: pointer;
-        aspect-ratio: 4/5;
+        display: block;
     }
     .ig-card-post:hover {
         border-color: rgba(212,168,67,0.5);
         transform: translateY(-6px);
         box-shadow: 0 16px 48px rgba(212,168,67,0.12), 0 0 30px rgba(212,168,67,0.04);
     }
-    .ig-card-post .ig-card-thumbnail {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background-size: cover;
-        background-position: center top;
+    .ig-card-post .ig-post-img {
+        width: 100%;
+        display: block;
         transition: transform 0.6s ease;
     }
-    .ig-card-post:hover .ig-card-thumbnail {
-        transform: scale(1.05);
+    .ig-card-post:hover .ig-post-img {
+        transform: scale(1.03);
     }
     .ig-card-post .ig-card-overlay {
         position: absolute;
         top: 0; left: 0;
         width: 100%; height: 100%;
-        background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.4) 100%);
+        background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.25) 100%);
         z-index: 1;
         transition: background 0.4s ease;
+        pointer-events: none;
     }
     .ig-card-post .ig-card-top {
         position: absolute;
         top: 0.8rem; right: 0.8rem;
         z-index: 2;
+    }
+    .ig-card-post .ig-card-play {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 56px; height: 56px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(12px);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        transition: all 0.4s ease;
+    }
+    .ig-card-post .ig-card-play i {
+        color: white;
+        font-size: 1.2rem;
+        margin-left: 3px;
+    }
+    .ig-card-post:hover .ig-card-play {
+        background: rgba(212,168,67,0.85);
+        border-color: var(--gold-primary);
+        transform: translate(-50%, -50%) scale(1.15);
     }
     .ig-section-label {
         font-family: 'Inter', sans-serif;
@@ -663,7 +686,6 @@
         /* Instagram Gallery Mobile */
         .ig-gallery { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
         .ig-posts-gallery { grid-template-columns: 1fr; gap: 0.8rem; }
-        .ig-card-post { aspect-ratio: 1/1; }
         .ig-card-play { width: 48px; height: 48px; }
         .ig-card-play i { font-size: 1.1rem; margin-left: 3px; }
         .ig-card-info { padding: 0.6rem 0.6rem; }
@@ -864,7 +886,7 @@
             <div class="ig-posts-gallery">
                 @foreach($posts as $index => $post)
                     <a href="{{ $post->instagram_url }}" target="_blank" rel="noopener noreferrer" class="ig-card-post animate-fadeInUp delay-{{ $index + 1 }}" style="text-decoration: none;">
-                        <div class="ig-card-thumbnail" style="background-image: url('{{ $post->thumbnail_url ?? '' }}'); background-color: #1a1a1a;"></div>
+                        <img src="{{ $post->thumbnail_url ?? '' }}" alt="Instagram Post" class="ig-post-img" loading="lazy">
                         <div class="ig-card-overlay"></div>
                         <div class="ig-card-top">
                             <div class="ig-reel-tag"><i class="fas fa-camera"></i> Post</div>
