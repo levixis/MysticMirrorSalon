@@ -565,12 +565,19 @@
                 flex-direction: column;
                 padding: 1rem;
                 gap: 0.25rem;
-                transform: translateY(-120%);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
                 transition: var(--transition);
                 border-bottom: 1px solid var(--border-gold);
+                z-index: 999;
             }
             .navbar-links.active {
                 transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
             }
             .navbar-links a {
                 width: 100%;

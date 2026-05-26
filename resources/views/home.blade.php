@@ -6,6 +6,7 @@
     /* === Hero Section === */
     .hero {
         min-height: calc(100vh - 75px);
+        min-height: calc(100svh - 75px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -13,6 +14,7 @@
         position: relative;
         overflow: hidden;
         background: var(--bg-primary);
+        padding: 2rem 1rem;
     }
     .hero::before {
         content: '';
@@ -20,7 +22,7 @@
         top: -50%; left: -50%;
         width: 200%; height: 200%;
         background: conic-gradient(from 0deg at 50% 50%, transparent 0%, rgba(212,168,67,0.03) 15%, transparent 30%, rgba(196,145,123,0.02) 45%, transparent 60%);
-        animation: rotate 30s linear infinite;
+        animation: heroRotate 30s linear infinite;
     }
     .hero::after {
         content: '';
@@ -32,33 +34,34 @@
             radial-gradient(ellipse 40% 40% at 20% 80%, rgba(196,145,123,0.04) 0%, transparent 50%),
             radial-gradient(ellipse 40% 40% at 80% 20%, rgba(212,168,67,0.03) 0%, transparent 50%);
     }
-    @keyframes rotate {
+    @keyframes heroRotate {
         to { transform: rotate(360deg); }
     }
     .hero-content {
         position: relative;
         z-index: 2;
         max-width: 850px;
-        padding: 2rem;
+        width: 100%;
+        padding: 0 1rem;
     }
     .hero-badge {
         display: inline-block;
-        padding: 0.5rem 2rem;
+        padding: 0.4rem 1.2rem;
         border: 1px solid var(--border-gold-strong);
         border-radius: 50px;
         color: var(--gold-primary);
-        font-size: 0.7rem;
+        font-size: 0.6rem;
         font-weight: 700;
-        letter-spacing: 5px;
+        letter-spacing: 3px;
         text-transform: uppercase;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         animation: fadeInUp 0.6s ease-out;
         background: var(--gold-subtle);
         backdrop-filter: blur(10px);
     }
     .hero-title {
         font-family: 'Great Vibes', cursive;
-        font-size: 6rem;
+        font-size: clamp(2.8rem, 10vw, 6rem);
         color: var(--gold-primary);
         margin-bottom: 0.3rem;
         text-shadow: 0 0 60px rgba(212,168,67,0.2), 0 0 120px rgba(212,168,67,0.1);
@@ -67,37 +70,34 @@
     }
     .hero-subtitle {
         font-family: 'Cormorant Garamond', serif;
-        font-size: 1.4rem;
+        font-size: clamp(0.85rem, 2.5vw, 1.4rem);
         color: var(--text-secondary);
         margin-bottom: 0.3rem;
-        letter-spacing: 8px;
+        letter-spacing: clamp(3px, 1vw, 8px);
         text-transform: uppercase;
         animation: fadeInUp 1s ease-out;
         font-weight: 400;
     }
     .hero-tagline {
         font-family: 'Great Vibes', cursive;
-        font-size: 1.5rem;
+        font-size: clamp(1.1rem, 3vw, 1.5rem);
         color: var(--gold-light);
-        margin-bottom: 2.5rem;
+        margin-bottom: 1.5rem;
         animation: fadeInUp 1.1s ease-out;
         opacity: 0.8;
     }
     .hero-desc {
         color: var(--text-secondary);
-        font-size: 1.05rem;
-        margin-bottom: 3rem;
         line-height: 1.9;
         animation: fadeInUp 1.2s ease-out;
         font-family: 'Cormorant Garamond', serif;
-        font-size: 1.15rem;
+        font-size: clamp(0.95rem, 2vw, 1.15rem);
         max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto 2rem;
     }
     .hero-buttons {
         display: flex;
-        gap: 1.2rem;
+        gap: 1rem;
         justify-content: center;
         flex-wrap: wrap;
         animation: fadeInUp 1.4s ease-out;
@@ -666,23 +666,32 @@
         box-shadow: 0 8px 32px rgba(225, 48, 108, 0.4);
     }
 
-    @media (max-width: 768px) {
-        .hero { min-height: auto; padding-top: 3rem; padding-bottom: 3rem; }
-        .hero-title { font-size: 3.2rem; }
-        .hero-subtitle { font-size: 0.9rem; letter-spacing: 4px; }
-        .hero-tagline { font-size: 1.2rem; margin-bottom: 1.5rem; }
-        .hero-badge { font-size: 0.6rem; letter-spacing: 3px; padding: 0.4rem 1.2rem; margin-bottom: 1.5rem; }
-        .hero-desc { font-size: 1rem; margin-bottom: 2rem; }
+    /* Small phones (up to 480px) */
+    @media (max-width: 480px) {
+        .hero { padding: 2rem 0.5rem; }
+        .hero-badge { font-size: 0.55rem; letter-spacing: 2px; padding: 0.35rem 1rem; margin-bottom: 1.2rem; }
+        .hero-tagline { margin-bottom: 1.2rem; }
+        .hero-desc { margin-bottom: 1.5rem; padding: 0 0.5rem; }
+        .hero-buttons { flex-direction: column; align-items: center; gap: 0.7rem; }
+        .hero-buttons .btn { width: 85%; max-width: 300px; justify-content: center; }
+        .hero-content { padding: 0 0.5rem; }
         .hero-discount { display: none; }
+    }
 
-        .hero-buttons { flex-direction: column; align-items: center; gap: 0.8rem; }
-        .hero-buttons .btn { width: 80%; max-width: 280px; justify-content: center; }
-        .hero-content { padding: 1.5rem 1rem; }
+    /* Tablets & large phones (481px - 768px) */
+    @media (min-width: 481px) and (max-width: 768px) {
+        .hero { padding: 2.5rem 1rem; }
+        .hero-badge { font-size: 0.6rem; letter-spacing: 3px; padding: 0.4rem 1.2rem; }
+        .hero-buttons .btn { padding: 0.75rem 1.8rem; font-size: 0.85rem; }
+        .hero-content { padding: 0 1rem; }
+        .hero-discount { display: none; }
         .gender-section { grid-template-columns: 1fr; }
         .cta-section { padding: 3rem 1.5rem; }
         .cta-section h2 { font-size: 1.8rem; }
+    }
 
-        /* Instagram Gallery Mobile */
+    /* Shared mobile + tablet */
+    @media (max-width: 768px) {
         .ig-gallery { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
         .ig-posts-gallery { grid-template-columns: 1fr; gap: 0.8rem; }
         .ig-card-play { width: 48px; height: 48px; }
@@ -700,9 +709,13 @@
         .ig-follow-btn { font-size: 0.78rem; padding: 0.7rem 2rem; }
     }
 
-    @media (max-width: 400px) {
-        .hero-title { font-size: 2.6rem; }
-        .hero-subtitle { font-size: 0.8rem; letter-spacing: 3px; }
+    /* Desktop (769px+) */
+    @media (min-width: 769px) {
+        .hero-badge { font-size: 0.7rem; letter-spacing: 5px; padding: 0.5rem 2rem; margin-bottom: 2rem; }
+        .hero-tagline { margin-bottom: 2.5rem; }
+        .hero-desc { margin-bottom: 3rem; }
+        .hero-buttons { gap: 1.2rem; }
+        .hero-content { padding: 0 2rem; }
     }
 </style>
 @endsection
