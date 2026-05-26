@@ -776,9 +776,9 @@
         </div>
         <div class="ig-gallery">
             @foreach($instagramPosts as $index => $post)
-                <a href="{{ $post->instagram_url }}" target="_blank" rel="noopener noreferrer" class="ig-card animate-fadeInUp delay-{{ $index + 1 }}" style="text-decoration: none; {{ str_contains($post->instagram_url, '/p/') ? 'aspect-ratio: 4/5;' : '' }}">
+                <a href="{{ $post->instagram_url }}" target="_blank" rel="noopener noreferrer" class="ig-card animate-fadeInUp delay-{{ $index + 1 }}" style="text-decoration: none;">
                     <div class="ig-card-thumbnail" style="background-image: url('{{ $post->thumbnail_url ?? '' }}'); background-color: #1a1a1a;"></div>
-                    <div class="ig-card-overlay" style="{{ str_contains($post->instagram_url, '/p/') ? 'background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.5) 100%);' : '' }}"></div>
+                    <div class="ig-card-overlay"></div>
                     <div class="ig-card-top">
                         <div class="ig-reel-tag">
                             @if(str_contains($post->instagram_url, '/reel/'))
