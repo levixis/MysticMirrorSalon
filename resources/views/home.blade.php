@@ -776,9 +776,9 @@
         </div>
         <div class="ig-gallery">
             @foreach($instagramPosts as $index => $post)
-                <a href="{{ $post->instagram_url }}" target="_blank" rel="noopener noreferrer" class="ig-card animate-fadeInUp delay-{{ $index + 1 }}" style="text-decoration: none;">
+                <a href="{{ $post->instagram_url }}" target="_blank" rel="noopener noreferrer" class="ig-card animate-fadeInUp delay-{{ $index + 1 }}" style="text-decoration: none; {{ str_contains($post->instagram_url, '/p/') ? 'aspect-ratio: 4/5;' : '' }}">
                     <div class="ig-card-thumbnail" style="background-image: url('{{ $post->thumbnail_url ?? '' }}'); background-color: #1a1a1a;"></div>
-                    <div class="ig-card-overlay"></div>
+                    <div class="ig-card-overlay" style="{{ str_contains($post->instagram_url, '/p/') ? 'background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.5) 100%);' : '' }}"></div>
                     <div class="ig-card-top">
                         <div class="ig-reel-tag">
                             @if(str_contains($post->instagram_url, '/reel/'))
@@ -788,13 +788,11 @@
                             @endif
                         </div>
                     </div>
-                    <div class="ig-card-play">
-                        @if(str_contains($post->instagram_url, '/reel/'))
+                    @if(str_contains($post->instagram_url, '/reel/'))
+                        <div class="ig-card-play">
                             <i class="fas fa-play"></i>
-                        @else
-                            <i class="fab fa-instagram"></i>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
 
                 </a>
             @endforeach
@@ -830,7 +828,7 @@
                 <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
                 <h4>WhatsApp Us</h4>
                 <p>
-                    <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer" style="color: var(--gold-primary); text-decoration: none; font-size: 1.2rem; font-weight: 600; font-family: 'Playfair Display', serif;">7814748721</a>
+                    <a href="https://wa.me/918558999480" target="_blank" rel="noopener noreferrer" style="color: var(--gold-primary); text-decoration: none; font-size: 1.2rem; font-weight: 600; font-family: 'Playfair Display', serif;">8558999480</a>
                 </p>
             </div>
             <div class="contact-card">

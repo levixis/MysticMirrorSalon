@@ -98,7 +98,7 @@
                                             Ladowali Road, Jalandhar, 144001
                                         </p>
                                         <p style="color: #c9a84c; font-size: 14px; margin: 10px 0 0;">
-                                            📞 7814748721
+                                            📞 8558999480
                                         </p>
                                     </td>
                                 </tr>

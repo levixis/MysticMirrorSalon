@@ -43,5 +43,6 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     // Instagram Posts
     Route::post('/instagram', [AdminController::class, 'storeInstagramPost'])->name('admin.instagram.store');
     Route::post('/instagram/{id}/toggle', [AdminController::class, 'toggleInstagramPost'])->name('admin.instagram.toggle');
+    Route::post('/instagram/{id}/move/{direction}', [AdminController::class, 'moveInstagramPost'])->name('admin.instagram.move');
     Route::delete('/instagram/{id}', [AdminController::class, 'deleteInstagramPost'])->name('admin.instagram.destroy');
 });

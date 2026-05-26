@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Mystic Mirror Salon</title>
+    <link rel="icon" type="image/jpeg" href="{{ asset('favicon.jpg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.jpg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -798,6 +800,20 @@
                                 </div>
                             </div>
                             <div class="action-btns">
+                                <div style="display: flex; gap: 0.2rem; margin-right: 0.3rem;">
+                                    <form action="{{ route('admin.instagram.move', [$post->id, 'up']) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn-action" title="Move Up" style="font-size: 0.7rem; padding: 0.3rem 0.45rem; {{ $loop->first ? 'opacity: 0.3; pointer-events: none;' : '' }}">
+                                            <i class="fas fa-arrow-up"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.instagram.move', [$post->id, 'down']) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn-action" title="Move Down" style="font-size: 0.7rem; padding: 0.3rem 0.45rem; {{ $loop->last ? 'opacity: 0.3; pointer-events: none;' : '' }}">
+                                            <i class="fas fa-arrow-down"></i>
+                                        </button>
+                                    </form>
+                                </div>
                                 <span class="badge" style="{{ $post->is_visible ? 'background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3);' : 'background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3);' }}">
                                     {{ $post->is_visible ? 'Visible' : 'Hidden' }}
                                 </span>

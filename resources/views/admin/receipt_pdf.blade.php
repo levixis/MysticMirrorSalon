@@ -155,7 +155,7 @@
             <div class="salon-subtitle">Unisex Salon by Arjeena</div>
             <div class="salon-address">
                 1st Floor, SCO-1, Puda Complex, Ladowali Road, Jalandhar - 144001<br>
-                Phone: 7814748721
+                Phone: 8558999480
             </div>
             <div class="receipt-title">— Receipt —</div>
         </div>

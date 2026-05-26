@@ -98,7 +98,7 @@
             <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 1.1rem;">
                 Treat yourself to the finest beauty experience!
             </p>
-            <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer" class="btn btn-gold" style="padding: 1rem 3rem;">
+            <a href="https://wa.me/918558999480" target="_blank" rel="noopener noreferrer" class="btn btn-gold" style="padding: 1rem 3rem;">
                 <i class="fab fa-whatsapp"></i> Chat on WhatsApp
             </a>
         </div>

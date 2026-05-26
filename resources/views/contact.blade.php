@@ -288,8 +288,8 @@
                         <h3>WhatsApp Us</h3>
                     </div>
                     <p>
-                        <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer" style="font-size: 1.2rem; font-weight: 600; font-family: 'Playfair Display', serif;">
-                            7814748721
+                        <a href="https://wa.me/918558999480" target="_blank" rel="noopener noreferrer" style="font-size: 1.2rem; font-weight: 600; font-family: 'Playfair Display', serif;">
+                            8558999480
                         </a>
                     </p>
                 </div>

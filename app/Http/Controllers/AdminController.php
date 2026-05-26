@@ -413,6 +413,31 @@ class AdminController extends Controller
         return back()->with('success', "Instagram post is now {$status}.");
     }
 
+    public function moveInstagramPost($id, $direction)
+    {
+        $post = InstagramPost::findOrFail($id);
+
+        if ($direction === 'up') {
+            // Find the post with the next lower display_order
+            $swap = InstagramPost::where('display_order', '<', $post->display_order)
+                ->orderBy('display_order', 'desc')
+                ->first();
+        } else {
+            // Find the post with the next higher display_order
+            $swap = InstagramPost::where('display_order', '>', $post->display_order)
+                ->orderBy('display_order', 'asc')
+                ->first();
+        }
+
+        if ($swap) {
+            $tempOrder = $post->display_order;
+            $post->update(['display_order' => $swap->display_order]);
+            $swap->update(['display_order' => $tempOrder]);
+        }
+
+        return back()->with('success', 'Post reordered.');
+    }
+
     public function deleteInstagramPost($id)
     {
         InstagramPost::findOrFail($id)->delete();

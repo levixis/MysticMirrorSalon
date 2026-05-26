@@ -631,7 +631,7 @@
                 </p>
                 <div class="social-links">
                     <a href="https://www.instagram.com/mystic.mirror_unisex.salon/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-                    <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://wa.me/918558999480" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
             <div class="footer-section">
@@ -649,7 +649,7 @@
                         <span style="padding-left: 20px;">Ladowali Road, Jalandhar, 144001</span>
                     </a>
                 </p>
-                <p><i class="fab fa-whatsapp text-gold" style="width: 16px;"></i> <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer" style="color: var(--gold-primary); font-weight: 500;">7814748721</a></p>
+                <p><i class="fab fa-whatsapp text-gold" style="width: 16px;"></i> <a href="https://wa.me/918558999480" target="_blank" rel="noopener noreferrer" style="color: var(--gold-primary); font-weight: 500;">8558999480</a></p>
             </div>
         </div>
         <div class="footer-bottom">
