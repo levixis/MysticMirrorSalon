@@ -667,7 +667,7 @@
     }
 
     @media (max-width: 768px) {
-        .hero { min-height: calc(100vh - 75px); padding-bottom: 2rem; }
+        .hero { min-height: auto; padding-top: 3rem; padding-bottom: 3rem; }
         .hero-title { font-size: 3.2rem; }
         .hero-subtitle { font-size: 0.9rem; letter-spacing: 4px; }
         .hero-tagline { font-size: 1.2rem; margin-bottom: 1.5rem; }
