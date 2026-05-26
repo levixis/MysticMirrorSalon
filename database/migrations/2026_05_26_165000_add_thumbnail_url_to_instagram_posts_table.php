@@ -10,7 +10,7 @@ return new class extends Migration
     {
         if (!Schema::hasColumn('instagram_posts', 'thumbnail_url')) {
             Schema::table('instagram_posts', function (Blueprint $table) {
-                $table->string('thumbnail_url')->nullable();
+                $table->text('thumbnail_url')->nullable();
             });
         }
     }
