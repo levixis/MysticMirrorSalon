@@ -405,40 +405,208 @@
         font-size: 0.9rem;
     }
 
-    /* === Instagram Embed Gallery === */
-    .ig-embed-grid {
+    /* === Instagram Gallery (Custom Beautiful Design) === */
+    .ig-gallery {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 1.5rem;
         max-width: 1100px;
         margin: 0 auto;
-        justify-items: center;
     }
-    .ig-embed-card {
-        width: 100%;
-        max-width: 400px;
-        border-radius: 16px;
+    .ig-card {
+        position: relative;
+        border-radius: 20px;
         overflow: hidden;
-        border: 1px solid rgba(201,168,76,0.15);
-        background: #111;
+        border: 1px solid rgba(212,168,67,0.15);
+        background: linear-gradient(145deg, #111 0%, #0a0a0a 100%);
+        transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        cursor: pointer;
+        aspect-ratio: 9/16;
+        max-height: 480px;
+    }
+    .ig-card:hover {
+        border-color: rgba(212,168,67,0.5);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 60px rgba(212,168,67,0.15), 0 0 40px rgba(212,168,67,0.05);
+    }
+    .ig-card-thumbnail {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.6s ease;
+    }
+    .ig-card:hover .ig-card-thumbnail {
+        transform: scale(1.08);
+    }
+    .ig-card-overlay {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(
+            180deg,
+            rgba(0,0,0,0.1) 0%,
+            rgba(0,0,0,0.05) 40%,
+            rgba(0,0,0,0.4) 70%,
+            rgba(0,0,0,0.85) 100%
+        );
+        z-index: 1;
+        transition: background 0.4s ease;
+    }
+    .ig-card:hover .ig-card-overlay {
+        background: linear-gradient(
+            180deg,
+            rgba(0,0,0,0.05) 0%,
+            rgba(0,0,0,0.0) 40%,
+            rgba(0,0,0,0.3) 70%,
+            rgba(0,0,0,0.75) 100%
+        );
+    }
+    .ig-card-play {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 64px; height: 64px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
         transition: all 0.4s ease;
     }
-    .ig-embed-card:hover {
-        border-color: rgba(201,168,76,0.4);
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(201,168,76,0.12);
+    .ig-card-play i {
+        color: white;
+        font-size: 1.5rem;
+        margin-left: 4px;
     }
-    .ig-embed-card iframe {
-        border-radius: 16px !important;
+    .ig-card:hover .ig-card-play {
+        background: rgba(212,168,67,0.85);
+        border-color: var(--gold-primary);
+        transform: translate(-50%, -50%) scale(1.15);
+        box-shadow: 0 0 30px rgba(212,168,67,0.4);
     }
-    .ig-embed-card .instagram-media {
-        margin: 0 !important;
-        min-width: unset !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        border: none !important;
-        box-shadow: none !important;
-        background: #111 !important;
+    .ig-card:hover .ig-card-play i {
+        color: #050505;
+    }
+    .ig-card-info {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        padding: 1.5rem;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .ig-card-profile {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+    .ig-card-avatar {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        color: white;
+        font-weight: 700;
+        padding: 2px;
+    }
+    .ig-card-avatar-inner {
+        width: 100%; height: 100%;
+        border-radius: 50%;
+        background: #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Great Vibes', cursive;
+        font-size: 0.9rem;
+        color: var(--gold-primary);
+    }
+    .ig-card-handle {
+        font-size: 0.78rem;
+        color: rgba(255,255,255,0.9);
+        font-weight: 500;
+    }
+    .ig-card-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.8rem;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(8px);
+        border-radius: 50px;
+        border: 1px solid rgba(255,255,255,0.15);
+        transition: all 0.3s ease;
+    }
+    .ig-card:hover .ig-card-badge {
+        background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        border-color: transparent;
+    }
+    .ig-card-badge i {
+        font-size: 0.75rem;
+        color: white;
+    }
+    .ig-card-badge span {
+        font-size: 0.7rem;
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .ig-card-top {
+        position: absolute;
+        top: 1rem; right: 1rem;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .ig-reel-tag {
+        padding: 0.3rem 0.7rem;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(8px);
+        border-radius: 6px;
+        font-size: 0.65rem;
+        color: rgba(255,255,255,0.8);
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .ig-reel-tag i {
+        font-size: 0.6rem;
+    }
+    .ig-follow-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.8rem 2.5rem;
+        background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 700;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.4s ease;
+        box-shadow: 0 4px 20px rgba(225, 48, 108, 0.25);
+    }
+    .ig-follow-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 32px rgba(225, 48, 108, 0.4);
     }
 
     @media (max-width: 768px) {
@@ -605,20 +773,41 @@
             <div class="divider"></div>
             <p>See our latest transformations and styles on Instagram</p>
         </div>
-        <div class="ig-embed-grid">
-            @foreach($instagramPosts as $post)
-                <div class="ig-embed-card">
-                    <blockquote class="instagram-media"
-                        data-instgrm-permalink="{{ $post->instagram_url }}"
-                        data-instgrm-version="14"
-                        style="background: #111; border: 0; margin: 0; max-width: 100%; min-width: 280px; padding: 0; width: 100%;">
-                    </blockquote>
-                </div>
+        <div class="ig-gallery">
+            @foreach($instagramPosts as $index => $post)
+                <a href="{{ $post->instagram_url }}" target="_blank" rel="noopener noreferrer" class="ig-card animate-fadeInUp delay-{{ $index + 1 }}" style="text-decoration: none;">
+                    <div class="ig-card-thumbnail" style="background-image: url('{{ $post->thumbnail_url ?? '' }}'); background-color: #1a1a1a;"></div>
+                    <div class="ig-card-overlay"></div>
+                    <div class="ig-card-top">
+                        <div class="ig-reel-tag">
+                            <i class="fas fa-film"></i> Reel
+                        </div>
+                    </div>
+                    <div class="ig-card-play">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="ig-card-info">
+                        <div class="ig-card-profile">
+                            <div class="ig-card-avatar">
+                                <div class="ig-card-avatar-inner">M</div>
+                            </div>
+                            <span class="ig-card-handle">mystic.mirror_unisex.salon</span>
+                        </div>
+                        <div class="ig-card-badge">
+                            <i class="fab fa-instagram"></i>
+                            <span>View</span>
+                        </div>
+                    </div>
+                </a>
             @endforeach
+        </div>
+        <div style="text-align: center; margin-top: 2.5rem;">
+            <a href="https://www.instagram.com/mystic.mirror_unisex.salon/" target="_blank" rel="noopener noreferrer" class="ig-follow-btn">
+                <i class="fab fa-instagram"></i> Follow Us on Instagram
+            </a>
         </div>
     </div>
 </section>
-<script async src="//www.instagram.com/embed.js"></script>
 @endif
 
 <!-- Contact Info -->
@@ -633,17 +822,17 @@
                 <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
                 <h4>Address</h4>
                 <p>
-                    <a href="https://maps.app.goo.gl/mmkBSWgnhphKrmRt9" target="_blank" style="color: var(--text-secondary); text-decoration: none; transition: var(--transition-fast);">
+                    <a href="https://maps.app.goo.gl/pnhrqVhWQ2rLqNRL7" target="_blank" style="color: var(--text-secondary); text-decoration: none; transition: var(--transition-fast);">
                         1st Floor, SCO-1, Puda Complex,<br>
                         Ladowali Road, Jalandhar, 144001
                     </a>
                 </p>
             </div>
             <div class="contact-card">
-                <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                <h4>Contact</h4>
+                <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+                <h4>WhatsApp Us</h4>
                 <p>
-                    <a href="tel:7814748721" style="color: var(--gold-primary); text-decoration: none; font-size: 1.2rem; font-weight: 600; font-family: 'Playfair Display', serif;">7814748721</a>
+                    <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer" style="color: var(--gold-primary); text-decoration: none; font-size: 1.2rem; font-weight: 600; font-family: 'Playfair Display', serif;">7814748721</a>
                 </p>
             </div>
             <div class="contact-card">

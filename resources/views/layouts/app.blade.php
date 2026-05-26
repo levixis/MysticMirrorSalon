@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Mystic Mirror Unisex Salon by Arjeena - Premium grooming services for men and women in Jalandhar. Book your appointment today!">
+    <meta name="description" content="Mystic Mirror Unisex Salon by Arjeena - Premium grooming services for men and women in Jalandhar. Visit us today!">
     <title>@yield('title', 'Mystic Mirror Salon')</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -628,9 +628,9 @@
                     Premium unisex salon offering the finest grooming experience in Jalandhar. Where style meets elegance.
                 </p>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/mystic.mirror_unisex.salon/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61574437286498" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
             <div class="footer-section">
@@ -642,13 +642,13 @@
             <div class="footer-section">
                 <h3>Contact Us</h3>
                 <p style="margin-bottom: 0.5rem;">
-                    <a href="https://maps.app.goo.gl/mmkBSWgnhphKrmRt9" target="_blank" style="color: var(--text-secondary); text-decoration: none;">
+                    <a href="https://maps.app.goo.gl/pnhrqVhWQ2rLqNRL7" target="_blank" style="color: var(--text-secondary); text-decoration: none;">
                         <i class="fas fa-map-marker-alt text-gold" style="width: 16px;"></i>
                         1st Floor, SCO-1, Puda Complex,<br>
                         <span style="padding-left: 20px;">Ladowali Road, Jalandhar, 144001</span>
                     </a>
                 </p>
-                <p><i class="fas fa-phone text-gold" style="width: 16px;"></i> <a href="tel:7814748721" style="color: var(--gold-primary); font-weight: 500;">7814748721</a></p>
+                <p><i class="fab fa-whatsapp text-gold" style="width: 16px;"></i> <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer" style="color: var(--gold-primary); font-weight: 500;">7814748721</a></p>
             </div>
         </div>
         <div class="footer-bottom">

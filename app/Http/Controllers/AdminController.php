@@ -10,6 +10,8 @@ use App\Models\Service;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -308,16 +310,88 @@ class AdminController extends Controller
     {
         $request->validate([
             'instagram_url' => 'required|url|max:500',
+            'thumbnail_url' => 'nullable|url|max:500',
         ]);
+
+        // Use manually provided thumbnail, or auto-scrape from Instagram
+        $thumbnailUrl = $request->thumbnail_url;
+
+        if (empty($thumbnailUrl)) {
+            $thumbnailUrl = $this->scrapeInstagramThumbnail($request->instagram_url);
+        }
 
         $maxOrder = InstagramPost::max('display_order') ?? 0;
 
         InstagramPost::create([
             'instagram_url' => $request->instagram_url,
+            'thumbnail_url' => $thumbnailUrl,
             'display_order' => $maxOrder + 1,
         ]);
 
-        return back()->with('success', 'Instagram reel added successfully!');
+        $msg = 'Instagram reel added successfully!';
+        if ($thumbnailUrl) {
+            $msg .= ' Thumbnail auto-fetched.';
+        } else {
+            $msg .= ' (No thumbnail found — you can add one manually later.)';
+        }
+
+        return back()->with('success', $msg);
+    }
+
+    /**
+     * Attempt to scrape the og:image thumbnail from an Instagram URL.
+     * Uses mobile User-Agent to get server-rendered og:image meta tag.
+     * Returns null if scraping fails (graceful fallback).
+     */
+    private function scrapeInstagramThumbnail(string $url): ?string
+    {
+        // Strategy 1: Scrape og:image using mobile User-Agent
+        // Instagram serves server-rendered meta tags to mobile browsers
+        try {
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+                    'Accept' => 'text/html',
+                    'Accept-Language' => 'en-US,en;q=0.5',
+                ])
+                ->get($url);
+
+            if ($response->successful()) {
+                $html = $response->body();
+
+                // Look for og:image meta tag (property before content)
+                if (preg_match('/<meta[^>]*property=["\']og:image["\'][^>]*content=["\']([^"\'>]+)["\'][^>]*>/i', $html, $matches)) {
+                    return html_entity_decode($matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                }
+                // Also try reverse order (content before property)
+                if (preg_match('/<meta[^>]*content=["\']([^"\'>]+)["\'][^>]*property=["\']og:image["\'][^>]*>/i', $html, $matches)) {
+                    return html_entity_decode($matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                }
+            }
+        } catch (\Exception $e) {
+            Log::info('Instagram thumbnail scrape failed: ' . $e->getMessage());
+        }
+
+        // Strategy 2: Try Instagram oEmbed API as fallback
+        try {
+            $oembedUrl = 'https://api.instagram.com/oembed/?url=' . urlencode($url) . '&omitscript=true';
+            $response = Http::timeout(8)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (compatible)',
+                ])
+                ->get($oembedUrl);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (!empty($data['thumbnail_url'])) {
+                    return $data['thumbnail_url'];
+                }
+            }
+        } catch (\Exception $e) {
+            Log::info('Instagram oEmbed failed: ' . $e->getMessage());
+        }
+
+        return null;
     }
 
     public function toggleInstagramPost($id)

@@ -749,7 +749,7 @@
                 <div class="ig-add-form">
                     <form action="{{ route('admin.instagram.store') }}" method="POST">
                         @csrf
-                        <div class="ig-form-row">
+                        <div class="ig-form-row" style="margin-bottom: 0.8rem;">
                             <div class="form-group">
                                 <label>Instagram Reel / Post URL *</label>
                                 <input type="url" name="instagram_url" class="form-control" placeholder="https://www.instagram.com/reel/DVLerJ_kT-w/" required>
@@ -758,16 +758,44 @@
                                 <i class="fas fa-plus"></i> Add Reel
                             </button>
                         </div>
+                        <p style="color: #666; font-size: 0.75rem; margin-top: -0.4rem; padding-left: 0.2rem;">
+                            <i class="fas fa-magic" style="color: #c9a84c;"></i>
+                            Thumbnail will be auto-scraped from Instagram. You can override it below (optional).
+                        </p>
+                        <div class="form-group" style="margin-top: 0.6rem;">
+                            <label>Manual Thumbnail Override (optional)</label>
+                            <input type="url" name="thumbnail_url" class="form-control" placeholder="Leave empty for auto-scrape — or paste a custom image URL">
+                        </div>
                     </form>
                 </div>
 
                 @if($instagramPosts->count() > 0)
                     @foreach($instagramPosts as $post)
                         <div class="ig-item">
-                            <div class="ig-url">
-                                <a href="{{ $post->instagram_url }}" target="_blank">
-                                    <i class="fab fa-instagram"></i> {{ Str::limit($post->instagram_url, 60) }}
-                                </a>
+                            <div class="ig-url" style="display: flex; align-items: center; gap: 0.8rem;">
+                                @if($post->thumbnail_url)
+                                    <img src="{{ $post->thumbnail_url }}" alt="thumb" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(201,168,76,0.2); flex-shrink: 0;">
+                                @else
+                                    <div style="width: 40px; height: 40px; border-radius: 6px; background: #222; border: 1px solid rgba(201,168,76,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        <i class="fas fa-image" style="color: #444; font-size: 0.7rem;"></i>
+                                    </div>
+                                @endif
+                                <div>
+                                    <a href="{{ $post->instagram_url }}" target="_blank">
+                                        <i class="fab fa-instagram"></i> {{ Str::limit($post->instagram_url, 50) }}
+                                    </a>
+                                    <div style="display: flex; gap: 0.4rem; margin-top: 0.2rem;">
+                                        @if($post->thumbnail_url)
+                                            <span class="badge" style="background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); font-size: 0.6rem;">
+                                                <i class="fas fa-image"></i> Thumb
+                                            </span>
+                                        @else
+                                            <span class="badge" style="background: rgba(234,179,8,0.1); color: #eab308; border: 1px solid rgba(234,179,8,0.2); font-size: 0.6rem;">
+                                                No Thumb
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                             <div class="action-btns">
                                 <span class="badge" style="{{ $post->is_visible ? 'background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3);' : 'background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3);' }}">

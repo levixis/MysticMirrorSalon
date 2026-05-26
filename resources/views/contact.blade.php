@@ -275,7 +275,7 @@
                         <h3>Visit Our Salon</h3>
                     </div>
                     <p>
-                        <a href="https://maps.app.goo.gl/mmkBSWgnhphKrmRt9" target="_blank">
+                        <a href="https://maps.app.goo.gl/pnhrqVhWQ2rLqNRL7" target="_blank">
                             1st Floor, SCO-1, Puda Complex,<br>
                             Ladowali Road, Jalandhar, 144001
                         </a>
@@ -284,11 +284,11 @@
 
                 <div class="info-card animate-fadeInUp delay-3">
                     <div class="info-card-header">
-                        <div class="info-card-icon"><i class="fas fa-phone"></i></div>
-                        <h3>Call Us</h3>
+                        <div class="info-card-icon"><i class="fab fa-whatsapp"></i></div>
+                        <h3>WhatsApp Us</h3>
                     </div>
                     <p>
-                        <a href="tel:7814748721" style="font-size: 1.2rem; font-weight: 600; font-family: 'Playfair Display', serif;">
+                        <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer" style="font-size: 1.2rem; font-weight: 600; font-family: 'Playfair Display', serif;">
                             7814748721
                         </a>
                     </p>

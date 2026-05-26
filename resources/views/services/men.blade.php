@@ -96,10 +96,10 @@
 
         <div class="book-cta">
             <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 1.1rem;">
-                Love what you see? Book your appointment now!
+                Love what you see? Reach out to us now!
             </p>
-            <a href="{{ route('contact') }}" class="btn btn-gold" style="padding: 1rem 3rem;">
-                <i class="fas fa-calendar-check"></i> Book Appointment
+            <a href="https://wa.me/917814748721" target="_blank" rel="noopener noreferrer" class="btn btn-gold" style="padding: 1rem 3rem;">
+                <i class="fab fa-whatsapp"></i> Chat on WhatsApp
             </a>
         </div>
     </div>

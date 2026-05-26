@@ -9,6 +9,7 @@ class InstagramPost extends Model
     protected $fillable = [
         'instagram_url',
         'video_path',
+        'thumbnail_url',
         'caption',
         'is_visible',
         'display_order',
