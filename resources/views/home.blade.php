@@ -102,37 +102,7 @@
         flex-wrap: wrap;
         animation: fadeInUp 1.4s ease-out;
     }
-    .hero-discount {
-        position: absolute;
-        top: 7rem;
-        right: 4rem;
-        width: 110px;
-        height: 110px;
-        background: linear-gradient(135deg, #c0392b, #e74c3c);
-        border-radius: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 700;
-        animation: float 3s ease-in-out infinite;
-        box-shadow: 0 8px 40px rgba(231, 76, 60, 0.3), inset 0 -2px 4px rgba(0,0,0,0.2);
-        z-index: 3;
-        border: 2px solid rgba(255,255,255,0.15);
-    }
-    .hero-discount .percent {
-        font-size: 1.8rem;
-        line-height: 1;
-        font-family: 'Playfair Display', serif;
-    }
-    .hero-discount .off {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-weight: 600;
-        opacity: 0.9;
-    }
+
 
     /* === Ornamental Line beneath hero === */
     .hero-ornament {
@@ -142,9 +112,10 @@
         gap: 1rem;
         padding: 2rem 0;
         color: var(--gold-primary);
-        opacity: 0.25;
-        font-size: 0.6rem;
-        letter-spacing: 4px;
+        opacity: 0.7;
+        font-size: 0.8rem;
+        letter-spacing: 5px;
+        font-weight: 600;
     }
     .hero-ornament::before, .hero-ornament::after {
         content: '';
@@ -408,7 +379,7 @@
     /* === Instagram Gallery (Custom Beautiful Design) === */
     .ig-gallery {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 1.5rem;
         max-width: 1100px;
         margin: 0 auto;
@@ -422,7 +393,6 @@
         transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
         cursor: pointer;
         aspect-ratio: 9/16;
-        max-height: 480px;
     }
     .ig-card:hover {
         border-color: rgba(212,168,67,0.5);
@@ -496,16 +466,19 @@
     .ig-card-info {
         position: absolute;
         bottom: 0; left: 0; right: 0;
-        padding: 1.5rem;
+        padding: 1rem 1rem;
         z-index: 2;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 0.5rem;
     }
     .ig-card-profile {
         display: flex;
         align-items: center;
-        gap: 0.7rem;
+        gap: 0.5rem;
+        min-width: 0;
+        flex: 1;
     }
     .ig-card-avatar {
         width: 36px; height: 36px;
@@ -531,9 +504,13 @@
         color: var(--gold-primary);
     }
     .ig-card-handle {
-        font-size: 0.78rem;
+        font-size: 0.72rem;
         color: rgba(255,255,255,0.9);
         font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 140px;
     }
     .ig-card-badge {
         display: flex;
@@ -610,13 +587,41 @@
     }
 
     @media (max-width: 768px) {
-        .hero-title { font-size: 3.5rem; }
-        .hero-subtitle { font-size: 1rem; letter-spacing: 4px; }
-        .hero-discount { top: 5rem; right: 1rem; width: 85px; height: 85px; }
-        .hero-discount .percent { font-size: 1.4rem; }
+        .hero { min-height: 100vh; padding-top: 75px; }
+        .hero-title { font-size: 3.2rem; }
+        .hero-subtitle { font-size: 0.9rem; letter-spacing: 4px; }
+        .hero-tagline { font-size: 1.2rem; margin-bottom: 1.5rem; }
+        .hero-badge { font-size: 0.6rem; letter-spacing: 3px; padding: 0.4rem 1.2rem; margin-bottom: 1.5rem; }
+        .hero-desc { font-size: 1rem; margin-bottom: 2rem; }
+        .hero-discount { display: none; }
+
+        .hero-buttons { flex-direction: column; align-items: center; gap: 0.8rem; }
+        .hero-buttons .btn { width: 80%; max-width: 280px; justify-content: center; }
+        .hero-content { padding: 1.5rem 1rem; }
         .gender-section { grid-template-columns: 1fr; }
         .cta-section { padding: 3rem 1.5rem; }
         .cta-section h2 { font-size: 1.8rem; }
+
+        /* Instagram Gallery Mobile */
+        .ig-gallery { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+        .ig-card-play { width: 48px; height: 48px; }
+        .ig-card-play i { font-size: 1.1rem; margin-left: 3px; }
+        .ig-card-info { padding: 0.6rem 0.6rem; }
+        .ig-card-avatar { width: 26px; height: 26px; padding: 1.5px; }
+        .ig-card-avatar-inner { font-size: 0.7rem; }
+        .ig-card-handle { font-size: 0.6rem; max-width: 80px; }
+        .ig-card-badge { padding: 0.25rem 0.5rem; }
+        .ig-card-badge i { font-size: 0.6rem; }
+        .ig-card-badge span { font-size: 0.55rem; }
+        .ig-card-profile { gap: 0.35rem; }
+        .ig-reel-tag { font-size: 0.55rem; padding: 0.2rem 0.5rem; }
+        .ig-card-top { top: 0.6rem; right: 0.6rem; }
+        .ig-follow-btn { font-size: 0.78rem; padding: 0.7rem 2rem; }
+    }
+
+    @media (max-width: 400px) {
+        .hero-title { font-size: 2.6rem; }
+        .hero-subtitle { font-size: 0.8rem; letter-spacing: 3px; }
     }
 </style>
 @endsection
@@ -624,10 +629,6 @@
 @section('content')
 <!-- Hero Section -->
 <section class="hero">
-    <div class="hero-discount">
-        <span class="percent">20%</span>
-        <span class="off">Discount</span>
-    </div>
     <div class="hero-content">
         <div class="hero-badge">✦ &nbsp; Premium Grooming Experience &nbsp; ✦</div>
         <h1 class="hero-title">Mystic Mirror</h1>
@@ -780,24 +781,21 @@
                     <div class="ig-card-overlay"></div>
                     <div class="ig-card-top">
                         <div class="ig-reel-tag">
-                            <i class="fas fa-film"></i> Reel
+                            @if(str_contains($post->instagram_url, '/reel/'))
+                                <i class="fas fa-film"></i> Reel
+                            @else
+                                <i class="fas fa-camera"></i> Post
+                            @endif
                         </div>
                     </div>
                     <div class="ig-card-play">
-                        <i class="fas fa-play"></i>
-                    </div>
-                    <div class="ig-card-info">
-                        <div class="ig-card-profile">
-                            <div class="ig-card-avatar">
-                                <div class="ig-card-avatar-inner">M</div>
-                            </div>
-                            <span class="ig-card-handle">mystic.mirror_unisex.salon</span>
-                        </div>
-                        <div class="ig-card-badge">
+                        @if(str_contains($post->instagram_url, '/reel/'))
+                            <i class="fas fa-play"></i>
+                        @else
                             <i class="fab fa-instagram"></i>
-                            <span>View</span>
-                        </div>
+                        @endif
                     </div>
+
                 </a>
             @endforeach
         </div>
