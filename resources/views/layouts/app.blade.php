@@ -552,8 +552,14 @@
             background: linear-gradient(90deg, var(--gold-primary), transparent);
         }
 
+        /* Brand name visibility */
+        .brand-short { display: none; }
+        .brand-full { display: inline; }
+
         /* === Responsive === */
         @media (max-width: 768px) {
+            .brand-full { display: none; }
+            .brand-short { display: inline; }
             .menu-toggle { display: flex; align-items: center; justify-content: center; }
             .navbar-links {
                 position: fixed;
@@ -610,7 +616,10 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="navbar-inner">
-            <a href="{{ route('home') }}" class="navbar-brand">Mystic Mirror</a>
+            <a href="{{ route('home') }}" class="navbar-brand">
+                <span class="brand-full">Mystic Mirror</span>
+                <span class="brand-short">MM</span>
+            </a>
             <button class="menu-toggle" onclick="document.querySelector('.navbar-links').classList.toggle('active')">
                 <i class="fas fa-bars"></i>
             </button>

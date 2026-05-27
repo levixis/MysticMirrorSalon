@@ -171,7 +171,7 @@
         letter-spacing: 0.3px;
     }
     .feature-item p {
-        color: var(--text-muted);
+        color: var(--text-secondary);
         font-size: 0.8rem;
         font-family: 'Cormorant Garamond', serif;
         font-style: italic;
@@ -693,9 +693,37 @@
         .cta-section { padding: 3rem 1.5rem; }
         .cta-section h2 { font-size: 1.8rem; }
 
-        /* Instagram Gallery */
-        .ig-gallery { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
-        .ig-posts-gallery { grid-template-columns: 1fr; gap: 0.8rem; }
+        /* Instagram Gallery — horizontal carousel */
+        .ig-gallery {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            scrollbar-width: none;
+        }
+        .ig-gallery::-webkit-scrollbar { display: none; }
+        .ig-gallery .ig-card {
+            flex: 0 0 65vw;
+            max-width: 260px;
+            scroll-snap-align: start;
+        }
+        .ig-posts-gallery {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            scrollbar-width: none;
+        }
+        .ig-posts-gallery::-webkit-scrollbar { display: none; }
+        .ig-posts-gallery .ig-card-post {
+            flex: 0 0 75vw;
+            max-width: 320px;
+            scroll-snap-align: start;
+        }
         .ig-card-play { width: 48px; height: 48px; }
         .ig-card-play i { font-size: 1.1rem; margin-left: 3px; }
         .ig-card-info { padding: 0.6rem 0.6rem; }
@@ -709,6 +737,15 @@
         .ig-reel-tag { font-size: 0.55rem; padding: 0.2rem 0.5rem; }
         .ig-card-top { top: 0.6rem; right: 0.6rem; }
         .ig-follow-btn { font-size: 0.78rem; padding: 0.7rem 2rem; }
+
+        /* Ornament — prevent wrapping */
+        .hero-ornament {
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            padding: 1.5rem 1rem;
+        }
+        .hero-ornament::before, .hero-ornament::after { width: 30px; }
     }
 
     /* Very small phones — 2-col features */
