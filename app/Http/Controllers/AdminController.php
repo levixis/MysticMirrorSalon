@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\RevenueExport;
 use App\Mail\AdminPasswordReset;
+use App\Models\ContactMessage;
 use App\Models\InstagramPost;
 use App\Models\Receipt;
 use App\Models\Service;
@@ -195,9 +196,14 @@ class AdminController extends Controller
         // Recent receipts
         $recentReceipts = Receipt::latest()->take(10)->get();
 
+        // Contact Messages
+        $contactMessages = ContactMessage::latest()->take(20)->get();
+        $unreadMessages = ContactMessage::where('is_read', false)->count();
+
         return view('admin.dashboard', compact(
             'todayRevenue', 'monthlyRevenue',
-            'services', 'instagramPosts', 'recentReceipts'
+            'services', 'instagramPosts', 'recentReceipts',
+            'contactMessages', 'unreadMessages'
         ));
     }
 
@@ -450,5 +456,20 @@ class AdminController extends Controller
     {
         session()->forget('admin_logged_in');
         return redirect()->route('admin.login');
+    }
+
+    // ---- Contact Messages ----
+
+    public function markMessageRead($id)
+    {
+        $message = ContactMessage::findOrFail($id);
+        $message->update(['is_read' => true]);
+        return back()->with('success', 'Message marked as read.');
+    }
+
+    public function deleteMessage($id)
+    {
+        ContactMessage::findOrFail($id)->delete();
+        return back()->with('success', 'Message deleted.');
     }
 }

@@ -615,6 +615,12 @@
             <button class="dash-tab" onclick="switchTab('instagram')">
                 <i class="fab fa-instagram"></i> Instagram
             </button>
+            <button class="dash-tab" onclick="switchTab('messages')">
+                <i class="fas fa-envelope"></i> Messages
+                @if($unreadMessages > 0)
+                    <span class="badge" style="background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); margin-left: 0.3rem; font-size: 0.65rem;">{{ $unreadMessages }}</span>
+                @endif
+            </button>
         </div>
 
 
@@ -838,6 +844,75 @@
                     <div class="empty-state">
                         <i class="fab fa-instagram"></i>
                         <p>No Instagram reels added yet. Paste a reel URL above to get started!</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- ========== MESSAGES TAB ========== -->
+        <div class="tab-content" id="tab-messages">
+            <div class="section-card">
+                <div class="section-header">
+                    <h2><i class="fas fa-envelope"></i> Contact Messages</h2>
+                    <span style="color: #888; font-size: 0.8rem;">{{ $contactMessages->count() }} messages</span>
+                </div>
+                @if($contactMessages->count() > 0)
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Name</th>
+                                <th>Contact</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($contactMessages as $msg)
+                                <tr style="{{ !$msg->is_read ? 'background: rgba(201,168,76,0.03);' : '' }}">
+                                    <td>
+                                        @if(!$msg->is_read)
+                                            <span class="badge badge-pending"><i class="fas fa-circle" style="font-size: 0.5rem;"></i> New</span>
+                                        @else
+                                            <span class="badge" style="background: rgba(100,100,100,0.15); color: #888; border: 1px solid rgba(100,100,100,0.3);">Read</span>
+                                        @endif
+                                    </td>
+                                    <td style="font-weight: {{ !$msg->is_read ? '600' : '400' }};">{{ $msg->name }}</td>
+                                    <td>
+                                        <div style="font-size: 0.82rem;">{{ $msg->email }}</div>
+                                        <div style="font-size: 0.78rem; color: #888;">{{ $msg->phone }}</div>
+                                    </td>
+                                    <td style="font-size: 0.82rem; max-width: 250px;">{{ Str::limit($msg->message, 80) }}</td>
+                                    <td style="font-size: 0.78rem; color: #888; white-space: nowrap;">{{ $msg->created_at->format('d M, h:i A') }}</td>
+                                    <td>
+                                        <div class="action-btns">
+                                            @if(!$msg->is_read)
+                                                <form action="{{ route('admin.messages.read', $msg->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn-action btn-approve" title="Mark as Read">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            <form action="{{ route('admin.messages.destroy', $msg->id) }}" method="POST"
+                                                onsubmit="return confirm('Delete this message?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn-action btn-delete" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="empty-state">
+                        <i class="fas fa-envelope-open"></i>
+                        <p>No contact messages yet.</p>
                     </div>
                 @endif
             </div>
