@@ -618,7 +618,7 @@
         <div class="navbar-inner">
             <a href="{{ route('home') }}" class="navbar-brand">
                 <span class="brand-full">Mystic Mirror</span>
-                <span class="brand-short">MM</span>
+                <span class="brand-short">✦</span>
             </a>
             <button class="menu-toggle" onclick="document.querySelector('.navbar-links').classList.toggle('active')">
                 <i class="fas fa-bars"></i>
