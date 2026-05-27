@@ -27,7 +27,7 @@ class ContactController extends Controller
             Mail::to($adminEmail)->send(new ContactFormSubmission($validated));
         } catch (\Exception $e) {
             \Log::error('Failed to send contact form email: ' . $e->getMessage());
-            return back()->withInput()->withErrors(['email' => 'Failed to send message. Please try again later.']);
+            return back()->withInput()->withErrors(['email' => 'Mail error: ' . $e->getMessage()]);
         }
 
         return redirect()->route('contact')->with('success', 'Your message has been sent successfully! We\'ll get back to you soon.');

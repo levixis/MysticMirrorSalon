@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\RevenueExport;
 use App\Mail\AdminPasswordReset;
 use App\Models\ContactMessage;
 use App\Models\InstagramPost;
@@ -15,7 +14,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -265,10 +263,41 @@ class AdminController extends Controller
         }
 
         $filename = $period === 'daily'
-            ? 'revenue_' . now()->format('Y-m-d') . '.xlsx'
-            : 'revenue_' . now()->format('Y-m') . '.xlsx';
+            ? 'revenue_' . now()->format('Y-m-d') . '.csv'
+            : 'revenue_' . now()->format('Y-m') . '.csv';
 
-        return Excel::download(new RevenueExport($period), $filename);
+        $receipts = $period === 'daily'
+            ? Receipt::whereDate('created_at', today())->latest()->get()
+            : Receipt::whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->latest()->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function () use ($receipts) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['Receipt #', 'Customer', 'Phone', 'Services', 'Subtotal', 'Discount %', 'Total', 'Payment Method', 'Date']);
+            foreach ($receipts as $receipt) {
+                $services = collect($receipt->services)->pluck('name')->implode(', ');
+                fputcsv($file, [
+                    str_pad($receipt->id, 5, '0', STR_PAD_LEFT),
+                    $receipt->customer_name,
+                    $receipt->phone ?? '',
+                    $services,
+                    $receipt->subtotal,
+                    $receipt->discount_percent,
+                    $receipt->total,
+                    $receipt->payment_method,
+                    $receipt->created_at->format('d M Y, h:i A'),
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     // ---- Service CRUD ----
