@@ -130,7 +130,7 @@
     /* === Features === */
     .features-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
     }
     .feature-item {
@@ -666,8 +666,9 @@
         box-shadow: 0 8px 32px rgba(225, 48, 108, 0.4);
     }
 
-    /* Small phones (up to 480px) */
-    @media (max-width: 480px) {
+    /* All mobile & tablet (up to 768px) */
+    @media (max-width: 768px) {
+        /* Hero */
         .hero { padding: 2rem 0.5rem; }
         .hero-badge { font-size: 0.55rem; letter-spacing: 2px; padding: 0.35rem 1rem; margin-bottom: 1.2rem; }
         .hero-tagline { margin-bottom: 1.2rem; }
@@ -676,22 +677,23 @@
         .hero-buttons .btn { width: 85%; max-width: 300px; justify-content: center; }
         .hero-content { padding: 0 0.5rem; }
         .hero-discount { display: none; }
-    }
 
-    /* Tablets & large phones (481px - 768px) */
-    @media (min-width: 481px) and (max-width: 768px) {
-        .hero { padding: 2.5rem 1rem; }
-        .hero-badge { font-size: 0.6rem; letter-spacing: 3px; padding: 0.4rem 1.2rem; }
-        .hero-buttons .btn { padding: 0.75rem 1.8rem; font-size: 0.85rem; }
-        .hero-content { padding: 0 1rem; }
-        .hero-discount { display: none; }
-        .gender-section { grid-template-columns: 1fr; }
+        /* Gender Cards — single column */
+        .gender-section { grid-template-columns: 1fr; gap: 1.5rem; }
+        .gender-card { padding: 2rem 1.5rem; }
+
+        /* Features — compact 3-col */
+        .features-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+        .feature-item { padding: 1.5rem 0.5rem; }
+        .feature-item .feature-icon-wrap { width: 46px; height: 46px; font-size: 1rem; margin-bottom: 0.8rem; }
+        .feature-item h4 { font-size: 0.85rem; }
+        .feature-item p { font-size: 0.7rem; }
+
+        /* CTA */
         .cta-section { padding: 3rem 1.5rem; }
         .cta-section h2 { font-size: 1.8rem; }
-    }
 
-    /* Shared mobile + tablet */
-    @media (max-width: 768px) {
+        /* Instagram Gallery */
         .ig-gallery { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
         .ig-posts-gallery { grid-template-columns: 1fr; gap: 0.8rem; }
         .ig-card-play { width: 48px; height: 48px; }
@@ -709,6 +711,11 @@
         .ig-follow-btn { font-size: 0.78rem; padding: 0.7rem 2rem; }
     }
 
+    /* Very small phones — 2-col features */
+    @media (max-width: 380px) {
+        .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
     /* Desktop (769px+) */
     @media (min-width: 769px) {
         .hero-badge { font-size: 0.7rem; letter-spacing: 5px; padding: 0.5rem 2rem; margin-bottom: 2rem; }
@@ -716,6 +723,7 @@
         .hero-desc { margin-bottom: 3rem; }
         .hero-buttons { gap: 1.2rem; }
         .hero-content { padding: 0 2rem; }
+        .features-grid { grid-template-columns: repeat(6, 1fr); }
     }
 </style>
 @endsection
